@@ -18,6 +18,9 @@ namespace sifreleme
         {
             InitializeComponent();
         }
+        private bool isDragging = false;
+        private Point mouseOffset;
+        private Point formPosition;
         private string filePath;
         private string password;
         private void Form1_Load(object sender, EventArgs e)
@@ -136,6 +139,54 @@ namespace sifreleme
             catch (Exception ex)
             {
                 MessageBox.Show($"Şifre çözme sırasında hata oluştu: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void button3_MouseDown(object sender, MouseEventArgs e)
+        {
+            isDragging = true;
+            mouseOffset = e.Location;
+            formPosition = Location;
+        }
+
+        private void button3_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isDragging)
+            {
+                Cursor = Cursors.Default;
+            }
+            else
+            {
+                Cursor = Cursors.SizeAll;
+            }
+        }
+
+        private void button3_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging && e.Button == MouseButtons.Left)
+            {
+                Point currentPosition = PointToScreen(e.Location);
+                Location = new Point(currentPosition.X - mouseOffset.X, currentPosition.Y - mouseOffset.Y);
             }
         }
     }
